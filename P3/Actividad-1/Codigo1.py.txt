@@ -1,0 +1,11 @@
+def doubly_not_less(n):
+    i, x, y = 0, [*map(int, n)], [*map(int, reversed(n))]
+    while x > y:
+        if x[i] == y[i]:
+            if x[i] < 9:
+                y[i] += 1
+                break
+            i += 1
+        else:
+            y[i] = x[i]
+    return ''.join(map(str, reversed(y)))
