@@ -1,0 +1,34 @@
+import heapq
+
+def path_finder(area):
+    # Convertir el string en una matriz de enteros
+    grid = [list(map(int, line)) for line in area.splitlines()]
+    n = len(grid)
+    
+    # Cola de prioridad: (costo_acumulado, fila, columna)
+    pq = [(0, 0, 0)]
+    # Diccionario para rastrear el costo mínimo a cada celda
+    costs = {(0, 0): 0}
+    
+    while pq:
+        current_cost, r, c = heapq.heappop(pq)
+        
+        # Si llegamos al destino, retornamos el costo
+        if r == n - 1 and c == n - 1:
+            return current_cost
+            
+        # Explorar vecinos (Norte, Sur, Este, Oeste)
+        for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            nr, nc = r + dr, c + dc
+            
+            if 0 <= nr < n and 0 <= nc < n:
+                # El costo es la diferencia absoluta de altitudes
+                climb = abs(grid[nr][nc] - grid[r][c])
+                new_cost = current_cost + climb
+                
+                # Si encontramos un camino más barato a esta celda
+                if new_cost < costs.get((nr, nc), float('inf')):
+                    costs[(nr, nc)] = new_cost
+                    heapq.heappush(pq, (new_cost, nr, nc))
+                    
+    return costs.get((n-1, n-1), 0)
